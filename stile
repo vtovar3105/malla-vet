@@ -72,9 +72,13 @@ h1 {
   font-size: 1.2rem;
 }
 
+/* Tachado del nombre al aprobar */
+.cell.approved .name {
+  text-decoration: line-through;
+}
+
 /* Nombre del ramo */
 .cell .name {
   font-size: 1rem;
   line-height: 1.4;
 }
-
