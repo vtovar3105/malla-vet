@@ -67,7 +67,7 @@ const childrenMap = {
   "Internado 1": ["Internado 2"]
 };
 
-// Todos los ramos listados (sin duplicados)
+// Lista completa de cursos
 const allCourses = [
   "Animales, sociedad y medio ambiente",
   "Procesos Biológicos 1",
@@ -116,65 +116,52 @@ const allCourses = [
   "Internado 2"
 ];
 
-// Invertimos childrenMap para tener prerequisitesMap
+// Construimos el map de prerequisitos
 const prerequisitesMap = {};
-for (const [parent, children] of Object.entries(childrenMap)) {
-  for (const child of children) {
+for (const [pre, posts] of Object.entries(childrenMap)) {
+  posts.forEach(child => {
     if (!prerequisitesMap[child]) prerequisitesMap[child] = [];
-    prerequisitesMap[child].push(parent);
-  }
+    prerequisitesMap[child].push(pre);
+  });
 }
 
-// Inicializamos el grid
-const container = document.getElementById('grid-container');
+// Función para generar IDs válidas
+function slugify(str) {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+}
 
+// Creamos las celdas
+const container = document.getElementById('grid-container');
 allCourses.forEach(name => {
   const cell = document.createElement('div');
   cell.className = 'cell';
   cell.id = slugify(name);
   cell.innerHTML = `<div class="name">${name}</div>`;
-  // Si no tiene prerequisitos, está habilitado
-  if (!prerequisitesMap[name]) {
-    cell.classList.add('enabled');
-  } else {
-    cell.classList.add('locked');
-  }
+  // Si no tiene prereq, habilitado; si no, bloqueado
+  (prerequisitesMap[name] ? cell.classList.add('locked') : cell.classList.add('enabled'));
   container.appendChild(cell);
 });
 
-// Función para convertir nombre a id
-function slugify(str) {
-  return str.toLowerCase().replace(/[^a-z0-9]+/g,'-');
-}
-
-// Manejo de clics
+// Al hacer clic
 container.addEventListener('click', e => {
   const cell = e.target.closest('.cell');
   if (!cell || !cell.classList.contains('enabled')) return;
-  // Toggle aprobado
   cell.classList.toggle('approved');
-  // Cada vez que cambiamos un aprobado, re-evaluamos todos los hijos
   updateUnlocks();
 });
 
-// Revisa los cursos que deben desbloquearse
+// Función para bloquear/desbloquear según aprobados
 function updateUnlocks() {
   Object.entries(prerequisitesMap).forEach(([course, prereqs]) => {
-    const courseEl = document.getElementById(slugify(course));
-    // si ya está aprobado, no tocar
-    if (courseEl.classList.contains('approved')) return;
-    // si todos los prereqs están aprobados
-    const allDone = prereqs.every(p => {
-      const el = document.getElementById(slugify(p));
-      return el.classList.contains('approved');
-    });
-    if (allDone) {
-      courseEl.classList.remove('locked');
-      courseEl.classList.add('enabled');
-    } else {
-      courseEl.classList.remove('enabled');
-      courseEl.classList.add('locked');
-    }
+    const el = document.getElementById(slugify(course));
+    if (el.classList.contains('approved')) return;
+    const allDone = prereqs.every(p => 
+      document.getElementById(slugify(p)).classList.contains('approved')
+    );
+    el.classList.toggle('enabled', allDone);
+    el.classList.toggle('locked', !allDone);
   });
 }
 
+// Una pasada inicial
+updateUnlocks();
