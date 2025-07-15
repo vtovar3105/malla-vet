@@ -22,12 +22,33 @@ h1 {
 }
 
 /* Grid de celdas */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+.grid-by-cycle {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 10px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
   gap: 12px;
-  max-width: 1200px;
-  margin: 0 auto;
+  background: #f7f0fc;
+  padding: 10px;
+  border-radius: 10px;
+  min-width: 200px;
+  border: 2px solid #d8b3f0;
+}
+
+.column-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #4b0082;
+}
+
 }
 
 /* Cada celda */
