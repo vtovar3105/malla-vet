@@ -1,4 +1,3 @@
-// Definición de los ramos y sus prerequisitos
 const childrenMap = {
   "Procesos Biológicos 1": ["Procesos Biológicos en Organismo Animal"],
   "Estructura y función": ["Integración de los Sistemas 1", "Integración de los Sistemas 2"],
@@ -67,71 +66,6 @@ const childrenMap = {
   "Internado 1": ["Internado 2"]
 };
 
-// Lista completa de cursos
-const allCourses = [
-  "Animales, sociedad y medio ambiente",
-  "Procesos Biológicos 1",
-  "Estructura y función",
-  "Prácticas veterinarias 1",
-  "Liderazgo personal",
-  "Comunicación",
-  "Desarrollo Humano y Social",
-  "Procesos Biológicos en Organismo Animal",
-  "Prácticas Veterinarias 2",
-  "Integración de los Sistemas 1",
-  "Razonamiento Científico",
-  "Gestión y Búsqueda de Información Científica",
-  "Base de la Cría Animal",
-  "Agresión y Defensa en Medicina Veterinaria 1",
-  "Clínica y Conservación de Animales Silvestres",
-  "Integración de los Sistemas 2",
-  "Razonamiento Cuantitativo",
-  "Función y Disfunción de los Sistemas",
-  "Semiotecnia de Caninos y Felinos",
-  "Semiotecnia de Animales Grandes",
-  "Agresión y Defensa en Medicina Veterinaria 2",
-  "Estilos de Vida, Medio Ambiente y Salud",
-  "Principios de la Farmacología",
-  "Bienestar Animal",
-  "Clínica de Porcinos",
-  "Enfermedades de Animales Grandes",
-  "Enfermedades de Caninos y Felinos",
-  "Farmacología y Toxicología Veterinaria",
-  "Nutrición Animal",
-  "Clínica de Caninos y Felinos",
-  "Clínica de Animales Grandes 1",
-  "Enfermedades de Aves",
-  "Ética y Profesionalismo",
-  "Gestión en Medicina Veterinaria",
-  "Metodología de la Investigación Científica",
-  "Epidemiología y Salud Pública 1",
-  "Seminario Integrador 1",
-  "Externado",
-  "Proyecto de Investigación 1",
-  "Seminario Integrador 2",
-  "Epidemiología y Salud Pública 2",
-  "Internado 1",
-  "Curso de Trabajo de Investigación - Proyecto de Investigación 2",
-  "Seminario Integrador 3",
-  "Internado 2"
-];
-
-// Construimos el map de prerequisitos
-const prerequisitesMap = {};
-for (const [pre, posts] of Object.entries(childrenMap)) {
-  posts.forEach(child => {
-    if (!prerequisitesMap[child]) prerequisitesMap[child] = [];
-    prerequisitesMap[child].push(pre);
-  });
-}
-
-// Función para generar IDs válidas
-function slugify(str) {
-  return str.toLowerCase().replace(/[^a-z0-9]+/g,'-');
-}
-
-// Creamos las celdas
-// Malla organizada por ciclos (columnas)
 const mallaPorCiclo = {
   "1er Ciclo": [
     "Animales, sociedad y medio ambiente",
@@ -200,11 +134,22 @@ const mallaPorCiclo = {
   ]
 };
 
-// Reemplaza el contenedor
-const container = document.getElementById('grid-container');
-container.innerHTML = ''; // Limpia todo
+// Invertimos el mapa de hijos
+const prerequisitesMap = {};
+for (const [parent, children] of Object.entries(childrenMap)) {
+  for (const child of children) {
+    if (!prerequisitesMap[child]) prerequisitesMap[child] = [];
+    prerequisitesMap[child].push(parent);
+  }
+}
 
-// Creamos las columnas
+function slugify(str) {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+}
+
+const container = document.getElementById('grid-container');
+container.innerHTML = '';
+
 for (const [ciclo, cursos] of Object.entries(mallaPorCiclo)) {
   const col = document.createElement('div');
   col.className = 'column';
@@ -219,7 +164,6 @@ for (const [ciclo, cursos] of Object.entries(mallaPorCiclo)) {
     cell.className = 'cell';
     cell.id = slugify(nombre);
     cell.innerHTML = `<div class="name">${nombre}</div>`;
-    // Habilitado o bloqueado
     (prerequisitesMap[nombre] ? cell.classList.add('locked') : cell.classList.add('enabled'));
     col.appendChild(cell);
   });
@@ -227,9 +171,6 @@ for (const [ciclo, cursos] of Object.entries(mallaPorCiclo)) {
   container.appendChild(col);
 }
 
-});
-
-// Al hacer clic
 container.addEventListener('click', e => {
   const cell = e.target.closest('.cell');
   if (!cell || !cell.classList.contains('enabled')) return;
@@ -237,18 +178,11 @@ container.addEventListener('click', e => {
   updateUnlocks();
 });
 
-// Función para bloquear/desbloquear según aprobados
 function updateUnlocks() {
-  Object.entries(prerequisitesMap).forEach(([course, prereqs]) => {
-    const el = document.getElementById(slugify(course));
+  Object.entries(prerequisitesMap).forEach(([curso, prereqs]) => {
+    const el = document.getElementById(slugify(curso));
     if (el.classList.contains('approved')) return;
-    const allDone = prereqs.every(p => 
+    const desbloqueado = prereqs.every(p =>
       document.getElementById(slugify(p)).classList.contains('approved')
     );
-    el.classList.toggle('enabled', allDone);
-    el.classList.toggle('locked', !allDone);
-  });
-}
-
-// Una pasada inicial
-updateUnlocks();
+    el.classList.toggle('enabled', desbloqueado)
