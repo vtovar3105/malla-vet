@@ -1,11 +1,9 @@
-/* Reset básico */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* Fondo general */
 body {
   font-family: 'Segoe UI', sans-serif;
   background: #f5f0fa;
@@ -14,14 +12,12 @@ body {
   text-align: center;
 }
 
-/* Título */
 h1 {
   margin-bottom: 20px;
   font-size: 1.8rem;
   color: #4b0082;
 }
 
-/* Grid de celdas */
 .grid-by-cycle {
   display: flex;
   gap: 20px;
@@ -49,9 +45,6 @@ h1 {
   color: #4b0082;
 }
 
-}
-
-/* Cada celda */
 .cell {
   background: #e0c8f9;
   border: 2px solid #c496f0;
@@ -63,13 +56,11 @@ h1 {
   user-select: none;
 }
 
-/* Hover en habilitadas */
 .cell.enabled:hover {
   transform: scale(1.03);
   background: #d6b0f5;
 }
 
-/* Celda bloqueada */
 .cell.locked {
   background: #f0e7f8;
   border-color: #ddd;
@@ -77,29 +68,6 @@ h1 {
   cursor: not-allowed;
 }
 
-/* Celda aprobada */
 .cell.approved {
   background: #8a2be2;
-  border-color: #6f1cbb;
-  color: #fff;
-}
-
-/* Checkmark en aprobada */
-.cell.approved::after {
-  content: '✔';
-  position: absolute;
-  top: 8px;
-  right: 10px;
-  font-size: 1.2rem;
-}
-
-/* Tachado del nombre al aprobar */
-.cell.approved .name {
-  text-decoration: line-through;
-}
-
-/* Nombre del ramo */
-.cell .name {
-  font-size: 1rem;
-  line-height: 1.4;
-}
+  bor
