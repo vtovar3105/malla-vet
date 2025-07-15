@@ -185,4 +185,9 @@ function updateUnlocks() {
     const desbloqueado = prereqs.every(p =>
       document.getElementById(slugify(p)).classList.contains('approved')
     );
-    el.classList.toggle('enabled', desbloqueado)
+    el.classList.toggle('enabled', desbloqueado);
+    el.classList.toggle('locked', !desbloqueado);
+  });
+}
+
+updateUnlocks();
