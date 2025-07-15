@@ -131,15 +131,102 @@ function slugify(str) {
 }
 
 // Creamos las celdas
+// Malla organizada por ciclos (columnas)
+const mallaPorCiclo = {
+  "1er Ciclo": [
+    "Animales, sociedad y medio ambiente",
+    "Procesos Biológicos 1",
+    "Estructura y función",
+    "Prácticas veterinarias 1",
+    "Liderazgo personal"
+  ],
+  "2do Ciclo": [
+    "Comunicación",
+    "Desarrollo Humano y Social",
+    "Procesos Biológicos en Organismo Animal",
+    "Prácticas Veterinarias 2",
+    "Integración de los Sistemas 1"
+  ],
+  "3er Ciclo": [
+    "Razonamiento Científico",
+    "Gestión y Búsqueda de Información Científica",
+    "Base de la Cría Animal",
+    "Agresión y Defensa en Medicina Veterinaria 1",
+    "Clínica y Conservación de Animales Silvestres",
+    "Integración de los Sistemas 2"
+  ],
+  "4to Ciclo": [
+    "Razonamiento Cuantitativo",
+    "Función y Disfunción de los Sistemas",
+    "Semiotecnia de Caninos y Felinos",
+    "Semiotecnia de Animales Grandes",
+    "Agresión y Defensa en Medicina Veterinaria 2"
+  ],
+  "5to Ciclo": [
+    "Estilos de Vida, Medio Ambiente y Salud",
+    "Principios de la Farmacología",
+    "Bienestar Animal",
+    "Clínica de Porcinos",
+    "Enfermedades de Animales Grandes",
+    "Enfermedades de Caninos y Felinos"
+  ],
+  "6to Ciclo": [
+    "Farmacología y Toxicología Veterinaria",
+    "Nutrición Animal",
+    "Clínica de Caninos y Felinos",
+    "Clínica de Animales Grandes 1",
+    "Enfermedades de Aves"
+  ],
+  "7mo Ciclo": [
+    "Ética y Profesionalismo",
+    "Gestión en Medicina Veterinaria",
+    "Metodología de la Investigación Científica"
+  ],
+  "8vo Ciclo": [
+    "Epidemiología y Salud Pública 1",
+    "Seminario Integrador 1",
+    "Externado",
+    "Proyecto de Investigación 1"
+  ],
+  "9no Ciclo": [
+    "Seminario Integrador 2",
+    "Epidemiología y Salud Pública 2",
+    "Internado 1"
+  ],
+  "10mo Ciclo": [
+    "Curso de Trabajo de Investigación - Proyecto de Investigación 2",
+    "Seminario Integrador 3",
+    "Internado 2"
+  ]
+};
+
+// Reemplaza el contenedor
 const container = document.getElementById('grid-container');
-allCourses.forEach(name => {
-  const cell = document.createElement('div');
-  cell.className = 'cell';
-  cell.id = slugify(name);
-  cell.innerHTML = `<div class="name">${name}</div>`;
-  // Si no tiene prereq, habilitado; si no, bloqueado
-  (prerequisitesMap[name] ? cell.classList.add('locked') : cell.classList.add('enabled'));
-  container.appendChild(cell);
+container.innerHTML = ''; // Limpia todo
+
+// Creamos las columnas
+for (const [ciclo, cursos] of Object.entries(mallaPorCiclo)) {
+  const col = document.createElement('div');
+  col.className = 'column';
+
+  const title = document.createElement('div');
+  title.className = 'column-title';
+  title.textContent = ciclo;
+  col.appendChild(title);
+
+  cursos.forEach(nombre => {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.id = slugify(nombre);
+    cell.innerHTML = `<div class="name">${nombre}</div>`;
+    // Habilitado o bloqueado
+    (prerequisitesMap[nombre] ? cell.classList.add('locked') : cell.classList.add('enabled'));
+    col.appendChild(cell);
+  });
+
+  container.appendChild(col);
+}
+
 });
 
 // Al hacer clic
