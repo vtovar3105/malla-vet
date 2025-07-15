@@ -134,7 +134,6 @@ const mallaPorCiclo = {
   ]
 };
 
-// Invertimos el mapa de hijos
 const prerequisitesMap = {};
 for (const [parent, children] of Object.entries(childrenMap)) {
   for (const child of children) {
@@ -162,32 +161,4 @@ for (const [ciclo, cursos] of Object.entries(mallaPorCiclo)) {
   cursos.forEach(nombre => {
     const cell = document.createElement('div');
     cell.className = 'cell';
-    cell.id = slugify(nombre);
-    cell.innerHTML = `<div class="name">${nombre}</div>`;
-    (prerequisitesMap[nombre] ? cell.classList.add('locked') : cell.classList.add('enabled'));
-    col.appendChild(cell);
-  });
-
-  container.appendChild(col);
-}
-
-container.addEventListener('click', e => {
-  const cell = e.target.closest('.cell');
-  if (!cell || !cell.classList.contains('enabled')) return;
-  cell.classList.toggle('approved');
-  updateUnlocks();
-});
-
-function updateUnlocks() {
-  Object.entries(prerequisitesMap).forEach(([curso, prereqs]) => {
-    const el = document.getElementById(slugify(curso));
-    if (el.classList.contains('approved')) return;
-    const desbloqueado = prereqs.every(p =>
-      document.getElementById(slugify(p)).classList.contains('approved')
-    );
-    el.classList.toggle('enabled', desbloqueado);
-    el.classList.toggle('locked', !desbloqueado);
-  });
-}
-
-updateUnlocks();
+    cell.id =
